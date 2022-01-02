@@ -1,8 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-set_language="fr" # en fr
-set_system="debian 11"
+set_language="$1"
 
-source set_context.sh
+#====================================================
+current_app_dir=$PWD
+main_app_dir=$current_app_dir/main_app
 
-hello
+source $main_app_dir/tools.sh
+source $main_app_dir/variables.sh
+source $main_app_dir/main_process.sh

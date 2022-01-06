@@ -17,7 +17,7 @@ current_app_dir=$PWD
 
 # Greeting's message
 i18n_greeting="Welcome [Nexcloud install] principal menu"
-i18n_choice_quit="quit"
+i18n_choice_quit="Quit"
 i18n_menu_config_set="Set config"
 i18n_menu_config_import="Import config"
 i18n_press_enter_msg="Press Enter..."
@@ -49,7 +49,7 @@ msg_fr(){
 translate_msg(){
   if [ -z "$set_language" ]
   then
-    echo ""
+    true
   else
     if [ "$set_language" = "fr" ]; then
       msg_fr
@@ -60,6 +60,10 @@ translate_msg(){
 define_configuation(){
   clear
   echo "$i18n_define_config_msg_title"
+  if [ -f "nc_config.sh" ]; then
+    rm nc_config.sh
+  fi
+  touch nc_config.sh
   press_a_key
   main_loop
 }

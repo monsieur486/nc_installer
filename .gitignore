@@ -1,2 +1,7 @@
 .idea
 /nc_config.sh
+/nc_backup_db/
+/nc_backup_host/
+/nc_backup_scripts/
+/nc_backup_ssl/
+/nc_config/

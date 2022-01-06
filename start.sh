@@ -13,10 +13,10 @@ set_language="$1"
 nc_install_directory=$PWD
 
 # Nextcloud version
-#nextcloudVersion='latest.tar.bz2'
+nextcloudVersion='latest.tar.bz2'
 
 # Php version
-#php_version='7.4'
+php_version='7.4'
 
 # Nextcloud installer config directory
 nc_config=$nc_install_directory/nc_config

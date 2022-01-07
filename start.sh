@@ -13,7 +13,7 @@ mode="dev"
 #########################
 
 # Default messages
-i18n_application_name="[Nextcloud Instaler]"
+i18n_application_name="[ Nextcloud Instaler ]"
 i18n_must_be_root="End of sctipt.\nMust be run as root."
 i18n_set_hostname="Define Hostname"
 i18n_distribution_menu="Distribution choice"
@@ -33,7 +33,7 @@ i18n_restoration_define_parameter="Define restore parameters"
 i18n_restoration_import_parameter="Import restore parameters"
 
 msg_fr(){
-  i18n_application_name="[Nextcloud Installation]"
+  i18n_application_name="[ Nextcloud Installation ]"
   i18n_must_be_root="Fin du sctipt.\nDoit être exécuté en tant que root."
   i18n_set_hostname="Définir Hostname"
   i18n_distribution_menu="Choix de la distribution"
@@ -46,6 +46,8 @@ msg_fr(){
   i18n_full_installation_title="Instalation complète"
   i18n_restoration_define_parameter="Définir les paramètres de restauration"
   i18n_restoration_import_parameter="Importer les paramètres de restauration"
+  i18n_ips_do_not_match="Les ips ne correspondent pas"
+  i18n_ips_match="Les ips correspondent"
 }
 
 ######################
@@ -53,6 +55,35 @@ msg_fr(){
 #     FUNCTIONS      #
 #                    #
 ######################
+
+check_hostname(){
+
+  if [ $mode != "dev" ]; then
+    ip_from_hostname=$(dig +short "$1")
+    if [ ! "$ip_from_hostname" = "$2" ]
+    then
+      # shellcheck disable=SC2154
+      echo -e "${frmt_clr_red}$i18n_ips_do_not_match${frmt_default}"
+      echo -e "IP indiquée : ${frmt_clr_green}$2${frmt_default}"
+      echo -e "IP pour $1 : ${frmt_clr_red}${frmt_set_blink}$ip_from_hostname${frmt_default}"
+      echo ""
+      press_a_key
+      menu_set_hostname
+    else
+      echo -e "${frmt_clr_green}$i18n_ips_match${frmt_default}"
+      echo -e "IP indiquée : ${frmt_clr_green}$2${frmt_default}"
+      echo -e "IP pour $1 : ${frmt_clr_green}${frmt_set_blink}$ip_from_hostname${frmt_default}"
+      echo ""
+      press_a_key
+    fi
+  else
+    echo -e "${frmt_clr_green}$i18n_ips_match${frmt_default}"
+    echo -e "IP indiquée : ${frmt_clr_green}$2${frmt_default}"
+    echo -e "IP pour $1 : ${frmt_clr_green}${frmt_set_blink}$2${frmt_default}"
+    echo ""
+    press_a_key
+  fi
+}
 
 checkRoot(){
     if [ $mode != "dev" ]; then
@@ -135,9 +166,26 @@ full_installation(){
 initialisation(){
   translate_msg
   set_variable
+  set_color
   checkRoot
   create_app_directory
   menu_set_hostname
+}
+
+item_menu_title(){
+  echo -e "${frmt_clr_green}$i18n_application_name ${frmt_clr_yellow}$1${frmt_default}"
+}
+
+item_menu_choice(){
+  echo -e " ( ${frmt_clr_yellow}${1}${frmt_default} ) - ${2}"
+}
+
+item_menu_subchoice(){
+  echo -e " ( ${frmt_clr_cyan}${1}${frmt_default} ) - ${2}"
+}
+
+item_menu_quit(){
+  echo -e " ( ${frmt_clr_red}q${frmt_default} ) - $i18n_choice_quit"
 }
 
 main_loop(){
@@ -150,20 +198,19 @@ main_loop(){
 
 menu_distribution(){
   clear
-  echo "$i18n_application_name $i18n_distribution_menu"
+  item_menu_title "$i18n_distribution_menu"
   echo ""
-  echo " $i18n_hostname_select : $nc_hostname"
+  echo -e " $i18n_hostname_select : ${frmt_clr_cyan}$nc_hostname${frmt_default}"
   echo ""
-  echo " ( 1 ) - $i18n_distribution_set_debian_11_2"
-  echo " ( 2 ) - $i18n_distribution_set_debian_10_8"
-  echo " ( 3 ) - $i18n_distribution_set_debian_9_13"
-  echo " ( 4 ) - $i18n_distribution_set_debian_9_4"
-  echo " ( 5 ) - $i18n_distribution_set_ubuntu_20_04"
+  item_menu_choice 1 "$i18n_distribution_set_debian_11_2"
+  item_menu_choice 2 "$i18n_distribution_set_debian_10_8"
+  item_menu_choice 3 "$i18n_distribution_set_debian_9_13"
+  item_menu_choice 4 "$i18n_distribution_set_debian_9_4"
+  item_menu_choice 5 "$i18n_distribution_set_ubuntu_20_04"
   echo ""
+  item_menu_subchoice h "$i18n_set_hostname"
   echo ""
-  echo " ( h ) - $i18n_set_hostname"
-  echo ""
-  echo " ( q ) - $i18n_choice_quit"
+  item_menu_quit
   echo ""
   echo -n "> "
   read -r choice
@@ -202,19 +249,18 @@ menu_distribution(){
 menu_instalation_mode(){
   source "$nc_config/distribution.sh"
   clear
-  echo "$i18n_application_name $i18n_installation_mode"
+  item_menu_title "$i18n_installation_mode"
   echo ""
-  echo " $i18n_hostname_select : $nc_hostname"
-  echo " $i18n_distribution_select : $nc_distribution"
+  echo -e " $i18n_hostname_select : ${frmt_clr_cyan}$nc_hostname${frmt_default}"
+  echo -e " $i18n_distribution_select : ${frmt_clr_cyan}$nc_distribution${frmt_default}"
   echo ""
-  echo " ( 1 ) - $i18n_full_installation"
-  echo " ( 2 ) - $i18n_restoration_define_parameter"
-  echo " ( 3 ) - $i18n_restoration_import_parameter"
+  item_menu_choice 1 "$i18n_full_installation"
+  item_menu_choice 2 "$i18n_restoration_define_parameter"
+  item_menu_choice 3 "$i18n_restoration_import_parameter"
   echo ""
+  item_menu_subchoice d "$i18n_distribution_menu"
   echo ""
-  echo " ( d ) - $i18n_distribution_menu"
-  echo ""
-  echo " ( q ) - $i18n_choice_quit"
+  item_menu_quit
   echo ""
   echo -n "> "
   read -r choice
@@ -244,10 +290,14 @@ menu_instalation_mode(){
 
 menu_set_hostname(){
     clear
-    echo "$i18n_application_name $i18n_set_hostname"
+    item_menu_title "$i18n_set_hostname"
     echo ""
     echo -n "> "
     read -r nc_hostname
+    echo -n "IP > "
+    read -r nc_ip
+
+    check_hostname "$nc_hostname" "$nc_ip"
   }
 
 press_a_key(){
@@ -277,6 +327,67 @@ restoration_import_parameter(){
   echo "$i18n_restoration_import_parameter"
   press_a_key
   main_loop
+}
+
+set_color(){
+  # Default Text
+  frmt_default="\e[0m"
+
+  # Set
+  frmt_set_blink="\e[5m"
+  frmt_set_bold="\e[1m"
+  frmt_set_dim="\e[2m"
+  frmt_set_underlined="\e[4m"
+  frmt_set_reverse="\e[7m"
+  frmt_set_hidden="\e[8m"
+
+  # Reset
+  frmt_rst_blink="\e[25m"
+  frmt_rst_bold="\e[21m"
+  frmt_rst_dim="\e[22m"
+  frmt_rst_underlined="\e[24m"
+  frmt_rst_reverse="\e[27m"
+  frmt_rst_hidden="\e[28m"
+
+  # Regular color
+  frmt_clr_default="\e[39m"
+
+  frmt_clr_black="\e[30m"
+  frmt_clr_red="\e[31m"
+  frmt_clr_green="\e[32m"
+  frmt_clr_yellow="\e[33m"
+  frmt_clr_blue="\e[34m"
+  frmt_clr_magenta="\e[35m"
+  frmt_clr_cyan="\e[36m"
+  frmt_clr_light_gray="\e[37m"
+  frmt_clr_dark_gray="\e[90m"
+  frmt_clr_light_red="\e[91m"
+  frmt_clr_light_green="\e[92m"
+  frmt_clr_light_yellow="\e[93m"
+  frmt_clr_light_blue="\e[94m"
+  frmt_clr_light_magenta="\e[95m"
+  frmt_clr_light_cyan="\e[96m"
+  frmt_clr_white="\e[97m"
+
+  # Background
+  frmt_bkg_default="\e[49m"
+
+  frmt_bkg_black="\e[40m"
+  frmt_bkg_red="\e[41m"
+  frmt_bkg_green="\e[42m"
+  frmt_bkg_yellow="\e[43m"
+  frmt_bkg_blue="\e[44m"
+  frmt_bkg_magenta="\e[45m"
+  frmt_bkg_cyan="\e[46m"
+  frmt_bkg_light_gray="\e[47m"
+  frmt_bkg_dark_gray="\e[100m"
+  frmt_bkg_light_red="\e[101m"
+  frmt_bkg_light_green="\e[102m"
+  frmt_bkg_light_yellow="\e[103m"
+  frmt_bkg_light_blue="\e[104m"
+  frmt_bkg_light_magenta="\e[105m"
+  frmt_bkg_light_cyan="\e[106m"
+  frmt_bkg_white="\e[107m"
 }
 
 set_variable(){

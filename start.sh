@@ -11,7 +11,7 @@ mode="dev"
 #                       #
 #########################
 
-# Greeting's message
+# Default messages
 i18n_application_name="[Nextcloud Instaler]"
 i18n_must_be_root="End of sctipt.\nMust be run as root."
 i18n_set_hostname="Define Hostname"
@@ -246,6 +246,8 @@ set_variable(){
 
   # Data directory
   nc_data="$nc_home/data"
+
+  nc_distribution=''
 }
 
 translate_msg(){

@@ -3,6 +3,7 @@
 # get the locale code as argument
 set_language="$1"
 
+# Comment for production mode
 mode="dev"
 
 #########################
@@ -84,6 +85,46 @@ EOF
   main_loop
 }
 
+distribution_debian_10_8(){
+  cat >"$nc_config/distribution.sh"<<EOF
+#!/bin/bash
+
+nc_distribution="debian 10.8"
+nc_hostname="$nc_hostname"
+EOF
+  main_loop
+}
+
+distribution_debian_9_13(){
+  cat >"$nc_config/distribution.sh"<<EOF
+#!/bin/bash
+
+nc_distribution="debian 9.13"
+nc_hostname="$nc_hostname"
+EOF
+  main_loop
+}
+
+distribution_debian_9_4(){
+  cat >"$nc_config/distribution.sh"<<EOF
+#!/bin/bash
+
+nc_distribution="debian 9.4"
+nc_hostname="$nc_hostname"
+EOF
+  main_loop
+}
+
+distribution_ubuntu_20_04(){
+  cat >"$nc_config/distribution.sh"<<EOF
+#!/bin/bash
+
+nc_distribution="ubuntu 20.04"
+nc_hostname="$nc_hostname"
+EOF
+  main_loop
+}
+
 full_installation(){
   clear
   echo "$i18n_full_installation_title"
@@ -137,6 +178,22 @@ menu_distribution(){
 
   if [ "$choice" = 1 ]; then
     distribution_debian_11_2
+  fi
+
+  if [ "$choice" = 2 ]; then
+    distribution_debian_10_8
+  fi
+
+  if [ "$choice" = 3 ]; then
+    distribution_debian_9_13
+  fi
+
+  if [ "$choice" = 4 ]; then
+    distribution_debian_9_4
+  fi
+
+  if [ "$choice" = 5 ]; then
+    distribution_ubuntu_20_04
   fi
 
   menu_distribution

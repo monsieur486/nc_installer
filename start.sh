@@ -12,7 +12,7 @@ set_language="$1"
 
 # Greeting's message
 i18n_application_name="[Nextcloud Instaler]"
-i18n_mustBeRoot="End of sctipt.\nMust be run as root."
+i18n_must_be_root="End of sctipt.\nMust be run as root."
 i18n_set_hostname="Define Hostname"
 i18n_distribution_menu="Distribution choice"
 i18n_distribution_set_debian11="Debian 11"
@@ -28,7 +28,7 @@ i18n_restoration_import_parameter="Import restore parameters"
 
 msg_fr(){
   i18n_application_name="[Nextcloud Installation]"
-  i18n_mustBeRoot="Fin du sctipt.\nDoit être exécuté en tant que root."
+  i18n_must_be_root="Fin du sctipt.\nDoit être exécuté en tant que root."
   i18n_set_hostname="Définir Hostname"
   i18n_distribution_menu="Choix de la distribution"
   i18n_distribution_set_debian11="Debian 11"
@@ -39,7 +39,7 @@ msg_fr(){
   i18n_press_enter_msg="Appuyez sur Enter..."
   i18n_full_installation_title="Instalation complète"
   i18n_restoration_define_parameter="Définir les paramètres de restauration"
-  i18n_restoration_import_parameter="Importer les parameters de restauration"
+  i18n_restoration_import_parameter="Importer les paramètres de restauration"
 }
 
 ######################
@@ -50,7 +50,15 @@ msg_fr(){
 
 checkRoot(){
   # shellcheck disable=SC2059
-  [ "$(id -u)" = 0 ] || { echo -e "$i18n_mustBeRoot"; exit 1; }
+  [ "$(id -u)" = 0 ] || { echo -e "$i18n_must_be_root"; exit 1; }
+}
+
+create_app_directory(){
+  mkdir -p "$nc_config"
+  mkdir -p "$nc_backup_db"
+  mkdir -p "$nc_backup_ssl"
+  mkdir -p "$nc_backup_host"
+  mkdir -p "$nc_backup_scripts"
 }
 
 distribution_debian11(){
@@ -63,7 +71,32 @@ EOF
   main_loop
 }
 
-distribution_menu(){
+full_installation(){
+  clear
+  echo "$i18n_full_installation_title"
+  press_a_key
+  main_loop
+}
+
+initialisation(){
+
+  translate_msg
+  set_variable
+  checkRoot
+  create_app_directory
+  menu_set_hostname
+}
+
+main_loop(){
+
+  if [ -f "$nc_config/distribution.sh" ]; then
+  	menu_instalation_mode
+  else
+    menu_distribution
+  fi
+}
+
+menu_distribution(){
 
   clear
   echo "$i18n_application_name $i18n_distribution_menu"
@@ -92,39 +125,10 @@ distribution_menu(){
     distribution_debian11
   fi
 
-  distribution_menu
+  menu_distribution
 }
 
-full_installation(){
-  clear
-  echo "$i18n_full_installation_title"
-  press_a_key
-  main_loop
-}
-
-initialisation(){
-
-  translate_msg
-  set_variable
-  checkRoot
-  mkdir -p "$nc_config"
-  mkdir -p "$nc_backup_db"
-  mkdir -p "$nc_backup_ssl"
-  mkdir -p "$nc_backup_host"
-  mkdir -p "$nc_backup_scripts"
-  set_hostname
-}
-
-main_loop(){
-
-  if [ -f "$nc_config/distribution.sh" ]; then
-  	main_menu
-  else
-    distribution_menu
-  fi
-}
-
-main_menu(){
+menu_instalation_mode(){
   source "$nc_config/distribution.sh"
   clear
   echo "$i18n_application_name $i18n_installation_mode"
@@ -149,7 +153,7 @@ main_menu(){
   fi
 
   if [ "$choice" = "d" ]||[ "$choice" = "D" ]; then
-    distribution_menu
+    menu_distribution
   fi
 
   if [ "$choice" = 1 ]; then
@@ -164,8 +168,16 @@ main_menu(){
     restoration_import_parameter
   fi
 
-  main_loop
+  menu_instalation_mode
 }
+
+menu_set_hostname(){
+    clear
+    echo "$i18n_application_name $i18n_set_hostname"
+    echo ""
+    echo -n "> "
+    read -r nc_hostname
+  }
 
 press_a_key(){
   echo -n "$i18n_press_enter_msg"
@@ -195,14 +207,6 @@ restoration_import_parameter(){
   press_a_key
   main_loop
 }
-
-set_hostname(){
-    clear
-    echo "$i18n_application_name $i18n_set_hostname"
-    echo ""
-    echo -n "> "
-    read -r nc_hostname
-  }
 
 set_variable(){
   # Installation directory

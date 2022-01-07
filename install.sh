@@ -436,10 +436,10 @@ if [ -f "$nc_backup_ssl/privkey.pem" ]; then
 fi
 
 if [ -f "/etc/letsencrypt/live/$domainname/fullchain.pem" ]; then
-    cp /etc/letsencrypt/live/$domainname/fullchain.pem $nc_backup_ssl/
+    cp /etc/letsencrypt/live/"$domainname"/fullchain.pem "$nc_backup_ssl"/
 fi
 if [ -f "/etc/letsencrypt/live/$domainname/privkey.pem" ]; then
-    cp /etc/letsencrypt/live/$domainname/privkey.pem $nc_backup_ssl/
+    cp /etc/letsencrypt/live/"$domainname"/privkey.pem "$nc_backup_ssl"/
 fi
 
 cat >/etc/apache2/sites-available/nextcloud.conf<<EOF
@@ -504,9 +504,10 @@ alias NCrecup='bash $nc_backup_scripts/recup_nextcloud.sh' # Restore full app
 EOF
 
 cat >>~/.bashrc<<EOF
-source .aliases_nc
+source ~/.aliases_nc
 EOF
 
+# shellcheck disable=SC1090
 source ~/.bashrc
 
 apt-get update -y && apt-get upgrade -y && apt-get autoremove -y
@@ -521,6 +522,7 @@ apt-get update -y && apt-get upgrade -y && apt-get autoremove -y
 
 #=======================================================
 
+# shellcheck disable=SC2059
 [ "$(id -u)" = 0 ] || { printf "$i18n_mustBeRoot"; exit 1; }
 
 checkPrerequies

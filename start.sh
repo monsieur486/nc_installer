@@ -79,7 +79,7 @@ distribution_debian_11_2(){
   cat >"$nc_config/distribution.sh"<<EOF
 #!/bin/bash
 
-nc_distribution="debian 11.2"
+nc_distribution="$i18n_distribution_set_debian_11_2"
 nc_hostname="$nc_hostname"
 EOF
   main_loop
@@ -89,7 +89,7 @@ distribution_debian_10_8(){
   cat >"$nc_config/distribution.sh"<<EOF
 #!/bin/bash
 
-nc_distribution="debian 10.8"
+nc_distribution="$i18n_distribution_set_debian_10_8"
 nc_hostname="$nc_hostname"
 EOF
   main_loop
@@ -99,7 +99,7 @@ distribution_debian_9_13(){
   cat >"$nc_config/distribution.sh"<<EOF
 #!/bin/bash
 
-nc_distribution="debian 9.13"
+nc_distribution="$i18n_distribution_set_debian_9_13"
 nc_hostname="$nc_hostname"
 EOF
   main_loop
@@ -109,7 +109,7 @@ distribution_debian_9_4(){
   cat >"$nc_config/distribution.sh"<<EOF
 #!/bin/bash
 
-nc_distribution="debian 9.4"
+nc_distribution="$i18n_distribution_set_debian_9_4"
 nc_hostname="$nc_hostname"
 EOF
   main_loop
@@ -119,7 +119,7 @@ distribution_ubuntu_20_04(){
   cat >"$nc_config/distribution.sh"<<EOF
 #!/bin/bash
 
-nc_distribution="ubuntu 20.04"
+nc_distribution="$i18n_distribution_set_ubuntu_20_04"
 nc_hostname="$nc_hostname"
 EOF
   main_loop

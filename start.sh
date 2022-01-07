@@ -16,10 +16,14 @@ i18n_application_name="[Nextcloud Instaler]"
 i18n_must_be_root="End of sctipt.\nMust be run as root."
 i18n_set_hostname="Define Hostname"
 i18n_distribution_menu="Distribution choice"
-i18n_distribution_set_debian11="Debian 11"
+i18n_distribution_set_debian_11_2="Debian 11.2"
+i18n_distribution_set_debian_10_8="Debian 10.8"
+i18n_distribution_set_debian_9_13="Debian 9.13"
+i18n_distribution_set_debian_9_4="Debian 9.4"
+i18n_distribution_set_ubuntu_20_04="Ubuntu 20.04"
 i18n_installation_mode="Installation Mode"
 i18n_distribution_select="Distribution selected"
-i18n_host_select="Host selected"
+i18n_hostname_select="Hostname selected"
 i18n_choice_quit="Quit"
 i18n_full_installation="Full installation"
 i18n_press_enter_msg="Press Enter..."
@@ -32,9 +36,9 @@ msg_fr(){
   i18n_must_be_root="Fin du sctipt.\nDoit être exécuté en tant que root."
   i18n_set_hostname="Définir Hostname"
   i18n_distribution_menu="Choix de la distribution"
-  i18n_distribution_set_debian11="Debian 11"
+  i18n_installation_mode="Choisir le mode d'installation"
   i18n_distribution_select="Distribution séléctionnée"
-  i18n_host_select="Host selectioné"
+  i18n_hostname_select="Hostname selectioné"
   i18n_choice_quit="Quitter"
   i18n_full_installation="Instalation complète"
   i18n_press_enter_msg="Appuyez sur Enter..."
@@ -70,11 +74,11 @@ create_app_directory(){
   mkdir -p "$nc_backup_scripts"
 }
 
-distribution_debian11(){
+distribution_debian_11_2(){
   cat >"$nc_config/distribution.sh"<<EOF
 #!/bin/bash
 
-nc_distribution="debian 11"
+nc_distribution="debian 11.2"
 nc_hostname="$nc_hostname"
 EOF
   main_loop
@@ -107,9 +111,13 @@ menu_distribution(){
   clear
   echo "$i18n_application_name $i18n_distribution_menu"
   echo ""
-  echo " $i18n_host_select : $nc_hostname"
+  echo " $i18n_hostname_select : $nc_hostname"
   echo ""
-  echo " ( 1 ) - $i18n_distribution_set_debian11"
+  echo " ( 1 ) - $i18n_distribution_set_debian_11_2"
+  echo " ( 2 ) - $i18n_distribution_set_debian_10_8"
+  echo " ( 3 ) - $i18n_distribution_set_debian_9_13"
+  echo " ( 4 ) - $i18n_distribution_set_debian_9_4"
+  echo " ( 5 ) - $i18n_distribution_set_ubuntu_20_04"
   echo ""
   echo ""
   echo " ( h ) - $i18n_set_hostname"
@@ -124,11 +132,11 @@ menu_distribution(){
   fi
 
   if [ "$choice" = "h" ]||[ "$choice" = "H" ]; then
-    set_hostname
+    menu_set_hostname
   fi
 
   if [ "$choice" = 1 ]; then
-    distribution_debian11
+    distribution_debian_11_2
   fi
 
   menu_distribution
@@ -139,7 +147,7 @@ menu_instalation_mode(){
   clear
   echo "$i18n_application_name $i18n_installation_mode"
   echo ""
-  echo " $i18n_host_select : $nc_hostname"
+  echo " $i18n_hostname_select : $nc_hostname"
   echo " $i18n_distribution_select : $nc_distribution"
   echo ""
   echo " ( 1 ) - $i18n_full_installation"

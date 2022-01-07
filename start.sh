@@ -3,6 +3,7 @@
 # get the locale code as argument
 set_language="$1"
 
+mode="dev"
 
 #########################
 #                       #
@@ -49,8 +50,16 @@ msg_fr(){
 ######################
 
 checkRoot(){
-  # shellcheck disable=SC2059
-  [ "$(id -u)" = 0 ] || { echo -e "$i18n_must_be_root"; exit 1; }
+    if [ $mode != "dev" ]; then
+      # shellcheck disable=SC2059
+      [ "$(id -u)" = 0 ] || { echo -e "$i18n_must_be_root"; exit 1; }
+    else
+      rm -rf nc_config
+      rm -rf nc_backup_db
+      rm -rf nc_backup_ssl
+      rm -rf nc_backup_host
+      rm -rf nc_backup_scripts
+    fi
 }
 
 create_app_directory(){
@@ -230,8 +239,7 @@ set_variable(){
   # Backup scripts directory
   nc_backup_scripts=$nc_install_directory/nc_backup_scripts
 
-  nc_distribution=''
-  nc_home=''
+  nc_home='/var/www/vhosts'
 
   # Nextcloud directory
   nc_nextcloud="$nc_home/nextcloud"

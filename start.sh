@@ -79,7 +79,6 @@ full_installation(){
 }
 
 initialisation(){
-
   translate_msg
   set_variable
   checkRoot
@@ -88,7 +87,6 @@ initialisation(){
 }
 
 main_loop(){
-
   if [ -f "$nc_config/distribution.sh" ]; then
   	menu_instalation_mode
   else
@@ -97,7 +95,6 @@ main_loop(){
 }
 
 menu_distribution(){
-
   clear
   echo "$i18n_application_name $i18n_distribution_menu"
   echo ""

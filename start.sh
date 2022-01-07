@@ -26,12 +26,6 @@ i18n_full_installation_title="Full installation"
 i18n_restoration_define_parameter="Define restore parameters"
 i18n_restoration_import_parameter="Import restore parameters"
 
-#########################
-#                       #
-#      FR Messages      #
-#                       #
-#########################
-
 msg_fr(){
   i18n_application_name="[Nextcloud Installation]"
   i18n_mustBeRoot="Fin du sctipt.\nDoit être exécuté en tant que root."
